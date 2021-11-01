@@ -10,5 +10,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 public class Mensagem {
-    private String mensagem;
+
+    private String nome;
+    private String texto;
 }
