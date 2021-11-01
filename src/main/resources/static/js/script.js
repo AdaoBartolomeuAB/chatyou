@@ -9,7 +9,7 @@ var stompClient = null;
 var name = null;
 var token = null;
 
-var localizacao = null;
+var mensagem = null;
 
 function connect(event) {
     name = document.querySelector('#name').value.trim();
@@ -18,88 +18,54 @@ function connect(event) {
         document.querySelector('#welcome-page').classList.add('hidden');
         document.querySelector('#dialogue-page').classList.remove('hidden');
 
-        var socket = new SockJS('http://localhost:8086/api-entrega');
+        var socket = new SockJS('http://localhost:8080/api-chatyou');
 
         stompClient = Stomp.over(socket);
 
-        if (name === 'abu') {
 
-            console.log("Adilson se conectou");
+        console.log("Utilizador " +name+" se conectou");
 
-            token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI4IiwicGFwZWlzIjpbeyJhdXRob3JpdHkiOiJST0xFX0VTVEFGIn1dLCJpYXQiOjE2MjMzNDM1NTgsImV4cCI6MTYzMTIzMjk1OH0.GcTRn998QwsyyKjpsvZ8FLSPX2miJLJMCKoYdy0SDR8";
-        }
-
-        if (name === 'dono') {
-
-            console.log("Dono da enomenda se conectou");
-
-            token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5IiwicGFwZWlzIjpbeyJhdXRob3JpdHkiOiJST0xFX0RPTk9FTkNPTUVORCJ9XSwiaWF0IjoxNjIzMzQzMzc2LCJleHAiOjE2MzEyMzI3NzZ9.QUWVlqBRmrfg_x2gR_wMtRsvvKJvU2VXVzlnIZ4l1fA";
-        }
-
-        stompClient.connect({'X-Authorization': token}, connectionSuccess);
     }
+
+    stompClient.connect({}, connectionSuccess);
     event.preventDefault();
 }
 
 function connectionSuccess() {
 
-    console.log(name);
+    stompClient.subscribe('/topic/mensagem', {}, getEncomendas);
 
-    stompClient.subscribe('/user/topic/encomenda', {}, getEncomendas);
+    if (name === 'Adão') {
 
-    stompClient.subscribe('/user/topic/estafetas', {}, getReceived);
-
-    stompClient.subscribe('/user/topic/notificacoes', {}, getReceiv);
-
-    if (name === 'brian') {
-
-        localizacao = {
-            sender: name,
-            latitude: -8.826279,
-            longitude: 13.227614
+        mensagem = {
+            nome: name,
+            texto: "Olá a todos sou o Adão"
         };
 
-        stompClient.send("/app/tempo/real/estafeta", {}, JSON.stringify(localizacao));
+        stompClient.send("/app/tempo/real/mensagem", {}, JSON.stringify(mensagem));
     }
 
-    if (name === 'abu') {
+    if (name === 'Brian') {
 
-        console.log('Localização enviada');
-
-        localizacao = {
-            sender: name,
-            latitude: -8.826263,
-            longitude: 13.227362
+        mensagem = {
+            nome: name,
+            texto: "Olá a todos sou o Brian"
         };
 
-        stompClient.send("/app/tempo/real/estafeta", {}, JSON
-            .stringify(localizacao));
+        stompClient.send("/app/tempo/real/mensagem", {}, JSON
+            .stringify(mensagem));
     }
 
-    if (name === 'wagner') {
+    if (name === 'Wagner') {
 
-        localizacao = {
-            sender: name,
-            latitude: 9.9999999,
-            longitude: -8.8888888
+        mensagem = {
+            nome: name,
+            texto: "Olá a todos sou o Wagner"
         };
 
-        stompClient.send("/app/tempo/real/estafeta", {}, JSON
-            .stringify(localizacao));
+        stompClient.send("/app/tempo/real/mensagem", {}, JSON
+            .stringify(mensagem));
     }
-
-
-    if (name === 'dono') {
-
-        var numroFatura = 103;
-        console.log("Mensagem enviada do dono da encomenda");
-        stompClient.send("/app/tempo/real/encomenda/" + numroFatura);
-    }
-
-    if (name === 'admin') {
-        stompClient.send("/app/tempo/real/notificacoes");
-    }
-
 }
 
 function sendMessage(event) {
@@ -108,12 +74,12 @@ function sendMessage(event) {
 
     if (messageContent && stompClient) {
         var chatMessage = {
-            sender: name,
-            content: document.querySelector('#chatMessage').value,
+            nome: name,
+            texto: document.querySelector('#chatMessage').value,
             type: 'CHAT'
         };
 
-        stompClient.send("/chat.sendMessage", {}, JSON
+        stompClient.send("/app/tempo/real/mensagem", {}, JSON
             .stringify(chatMessage));
         document.querySelector('#chatMessage').value = '';
     }
