@@ -2,7 +2,6 @@ package com.chatyou.controlador;
 
 import com.chatyou.modelo.Mensagem;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -23,9 +22,9 @@ public class TempoRealControlador {
     }
 
     @MessageMapping("/tempo/real/mensagem")
-    public void atualizarLocalizacaoEstafeta(Mensagem mensagem) throws InterruptedException, IOException, URISyntaxException {
+    public void atualizarLocalizacaoEstafeta(Mensagem mensagem)  {
 
-        log.info("WebSocket Controlador-> mensagem enviada");
+        log.info("WebSocket Controlador-> mensagem enviada" +mensagem.toString());
 
         simpMessagingTemplate.convertAndSend( "/topic/mensagem", mensagem);
     }
