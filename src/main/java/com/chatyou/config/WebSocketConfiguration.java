@@ -40,7 +40,7 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/api-chatyou");
-        registry.addEndpoint("/api-chatyou").setAllowedOrigins("*").withSockJS();
+        registry.addEndpoint("/api-chatyou").setAllowedOriginPatterns("*").withSockJS();
     }
 
     @Override
