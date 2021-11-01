@@ -19,7 +19,7 @@ public class TempoRealEventListener {
 
     @EventListener
     public void handleWebSocketDisConnectListener(SessionDisconnectEvent event) {
-        log.info(String.format("Disconnection in web socket %s", Objects.requireNonNull(event.getUser()).getName()));
+        log.info(String.format("Disconnection in web socket %s", Objects.requireNonNull(event.toString())));
     }
 
 }
